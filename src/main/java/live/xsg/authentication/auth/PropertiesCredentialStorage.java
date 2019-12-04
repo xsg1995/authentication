@@ -1,6 +1,4 @@
-package live.xsg.authentication.custom;
-
-import live.xsg.authentication.auth.CredentialStorage;
+package live.xsg.authentication.auth;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,6 @@
-package live.xsg.authentication.auth;
+package live.xsg.authentication.custom;
+
+import live.xsg.authentication.auth.CredentialStorage;
 
 /**
  * 从Mysql中取出AppId对应的密码

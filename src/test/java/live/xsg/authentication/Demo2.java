@@ -10,11 +10,14 @@ import live.xsg.authentication.utils.SecurityUtil;
 public class Demo2 {
     public static void main(String[] args) {
         String baseUrl = "http://localhost:8080/server";
-        String password = "123456";
-        DefaultApiAuthencator authencator = new DefaultApiAuthencator();
         String appId = "app1";
+        String password = "xxx1";
         long timeStamp = System.currentTimeMillis();
         String token = SecurityUtil.encrypt( baseUrl + appId + password + timeStamp);
+
+        //默认使用PropertiesCredentialStorage，从配置文件app.properties获取appId和密码
+        DefaultApiAuthencator authencator = new DefaultApiAuthencator();
+
         ApiRequest request = new ApiRequest(baseUrl, token, appId, timeStamp);
         try {
             authencator.auth(request);

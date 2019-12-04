@@ -3,7 +3,7 @@ package live.xsg.authentication;
 import live.xsg.authentication.auth.ApiRequest;
 import live.xsg.authentication.auth.AuthToken;
 import live.xsg.authentication.auth.CredentialStorage;
-import live.xsg.authentication.auth.MySqlCredentialStorage;
+import live.xsg.authentication.auth.PropertiesCredentialStorage;
 import live.xsg.authentication.exception.TokenInvalidException;
 
 /**
@@ -15,7 +15,7 @@ public class DefaultApiAuthencator implements ApiAuthencator {
     private CredentialStorage credentialStorage;
 
     public DefaultApiAuthencator() {
-        this.credentialStorage = new MySqlCredentialStorage();
+        this.credentialStorage = new PropertiesCredentialStorage();
     }
 
     public DefaultApiAuthencator(CredentialStorage credentialStorage) {

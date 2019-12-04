@@ -1,5 +1,6 @@
 package live.xsg.authentication;
 
+import live.xsg.authentication.custom.MySqlCredentialStorage;
 import live.xsg.authentication.exception.TokenInvalidException;
 import live.xsg.authentication.utils.SecurityUtil;
 
@@ -10,17 +11,13 @@ public class Demo {
     public static void main(String[] args) {
 
         String password = "123456";
-        DefaultApiAuthencator authencator = new DefaultApiAuthencator();
-
-        //从配置文件中读取app与对应的密码
-//        String password = "xxx1";
-//        DefaultApiAuthencator authencator = new DefaultApiAuthencator(new PropertiesCredentialStorage());
-
         String appId = "app1";
         long timeStamp = System.currentTimeMillis();
-
         String token = SecurityUtil.encrypt( "http://localhost:8080/server" + appId + password + timeStamp);
         String url = "http://localhost:8080/server?token="+token+"&app_id="+appId+"&time_stamp=" + timeStamp;
+
+        //指定MySqlCredentialStorage，从数据库中查询appId对应的密码
+        DefaultApiAuthencator authencator = new DefaultApiAuthencator(new MySqlCredentialStorage());
 
         try {
             authencator.auth(url);
