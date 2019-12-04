@@ -8,7 +8,8 @@
 
 ### 使用
 
-####默认从文件app.properties中获取appId对应的密码
+#### 默认从文件app.properties中获取appId对应的密码
+
 ```
 String baseUrl = "http://localhost:8080/server";
 String appId = "app1";
@@ -27,7 +28,7 @@ try {
 }
 ```
 
-#### 自定义MySqlCredentialStorage，从myql中获取appId对应的密码，实现CredentialStorage接口
+#### 自定义MySqlCredentialStorage，从mysql中获取appId对应的密码，实现CredentialStorage接口
 ```
 /**
  * 从Mysql中取出AppId对应的密码
