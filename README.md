@@ -8,7 +8,7 @@
 
 ### 使用
 
-#### 默认从文件app.properties中获取appId对应的密码
+* 默认从文件app.properties中获取appId对应的密码
 
 ```java
 public class Demo {
@@ -33,7 +33,7 @@ public class Demo {
 
 ```
 
-#### 自定义MySqlCredentialStorage，从mysql中获取appId对应的密码，实现CredentialStorage接口
+* 自定义MySqlCredentialStorage，从mysql中获取appId对应的密码，实现CredentialStorage接口
 ```java
 /**
  * 从Mysql中取出AppId对应的密码
