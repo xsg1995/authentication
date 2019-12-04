@@ -10,26 +10,31 @@
 
 #### 默认从文件app.properties中获取appId对应的密码
 
-```
-String baseUrl = "http://localhost:8080/server";
-String appId = "app1";
-String password = "xxx1";
-long timeStamp = System.currentTimeMillis();
-//URL、AppID、密码、时间戳拼接在一起，通过加密算法生成token
-String token = SecurityUtil.encrypt( baseUrl + appId + password + timeStamp);
-
-DefaultApiAuthencator authencator = new DefaultApiAuthencator();
-ApiRequest request = new ApiRequest(baseUrl, token, appId, timeStamp);
-try {
-    authencator.auth(request);
-    System.out.println("验证通过...");
-} catch (TokenInvalidException e) {
-    System.out.println("验证失败，错误信息：" + e.getMessage());
+```java
+public class Demo {
+    public static void main(String[] args) {
+        String baseUrl = "http://localhost:8080/server";
+        String appId = "app1";
+        String password = "xxx1";
+        long timeStamp = System.currentTimeMillis();
+        //URL、AppID、密码、时间戳拼接在一起，通过加密算法生成token
+        String token = SecurityUtil.encrypt( baseUrl + appId + password + timeStamp);
+        
+        DefaultApiAuthencator authencator = new DefaultApiAuthencator();
+        ApiRequest request = new ApiRequest(baseUrl, token, appId, timeStamp);
+        try {
+            authencator.auth(request);
+            System.out.println("验证通过...");
+        } catch (TokenInvalidException e) {
+            System.out.println("验证失败，错误信息：" + e.getMessage());
+        }
+    }
 }
+
 ```
 
 #### 自定义MySqlCredentialStorage，从mysql中获取appId对应的密码，实现CredentialStorage接口
-```
+```java
 /**
  * 从Mysql中取出AppId对应的密码
  * Created by xsg on 2019/12/4.
@@ -42,7 +47,11 @@ public class MySqlCredentialStorage implements CredentialStorage {
     }
 }
 
-//使用
-//指定MySqlCredentialStorage，从数据库中查询appId对应的密码
-DefaultApiAuthencator authencator = new DefaultApiAuthencator(new MySqlCredentialStorage());
+public class Demo {
+    public static void main(String[] args) {
+        //指定MySqlCredentialStorage，从数据库中查询appId对应的密码
+        DefaultApiAuthencator authencator = new DefaultApiAuthencator(new MySqlCredentialStorage());
+    }
+}
+
 ```
