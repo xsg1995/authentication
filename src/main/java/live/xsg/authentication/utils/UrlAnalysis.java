@@ -19,23 +19,15 @@ public class UrlAnalysis {
     /**
      * url中的参数
      */
-    private Map<String, String> paramsMap = new HashMap<>();
+    private Map<String, String> paramsMap;
+
+    public UrlAnalysis(String baseUrl, Map<String, String> paramsMap) {
+        this.baseUrl = baseUrl;
+        this.paramsMap = paramsMap;
+    }
 
     public String getBaseUrl() {
         return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    /**
-     * 将参数加入到map中
-     * @param key
-     * @param val
-     */
-    public void put(String key, String val) {
-        this.paramsMap.put(key, val);
     }
 
     /**
@@ -53,13 +45,13 @@ public class UrlAnalysis {
      */
     public static UrlAnalysis generate(String url) {
         if(StringUtils.isEmpty(url)) {
-            return new UrlAnalysis();
+            return new UrlAnalysis(null, null);
         }
-        UrlAnalysis urlAnalysis = new UrlAnalysis();
 
         String[] urlSplit = url.split("\\?");
         String baseUrl = urlSplit[0];
-        urlAnalysis.setBaseUrl(baseUrl);
+
+        Map<String, String> paramMap = new HashMap<>();
         if(urlSplit[1] != null) {
             String params = urlSplit[1];
             String[] paramsSplit = params.split("&");
@@ -67,11 +59,14 @@ public class UrlAnalysis {
                 for (String keyVal : paramsSplit) {
                     String[] keyValSplit = keyVal.split("=");
                     if(keyValSplit != null) {
-                        urlAnalysis.put(keyValSplit[0], keyValSplit[1]);
+                        String key = keyValSplit.length > 0 ? keyValSplit[0] : "";
+                        String val = keyValSplit.length > 1 ? keyValSplit[1] : "";
+                        paramMap.put(key, val);
                     }
                 }
             }
         }
+        UrlAnalysis urlAnalysis = new UrlAnalysis(baseUrl, paramMap);
         return urlAnalysis;
     }
 
