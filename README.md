@@ -18,7 +18,7 @@ public class Demo {
         String password = "xxx1";
         long timeStamp = System.currentTimeMillis();
         //URL、AppID、密码、时间戳拼接在一起，通过加密算法生成token
-        String token = SecurityUtil.encrypt( baseUrl + appId + password + timeStamp);
+        String token = DefaultTokenSecurity.getInstance().encrypt( baseUrl + appId + password + timeStamp);
         
         DefaultApiAuthencator authencator = new DefaultApiAuthencator();
         ApiRequest request = new ApiRequest(baseUrl, token, appId, timeStamp);
@@ -54,4 +54,31 @@ public class Demo {
     }
 }
 
+```
+
+* 自定义MySqlResourceLoader，从mysql中获取配置信息，实现ResourceLoader接口
+```java
+/**
+ * 自定义配置资源加载，从mysql中获取
+ * Created by xsg on 2019/12/5.
+ */
+public class MySqlResourceLoader implements ResourceLoader {
+
+    @Override
+    public String getValueStringByKey(String key) {
+        return null;
+    }
+
+    @Override
+    public Long getValueLongByKey(String key) {
+        return 120000L;
+    }
+}
+
+public class Demo3 {
+    public static void main(String[] args) {
+        //指定MySqlResourceLoader，从数据库中获取配置信息
+        DefaultApiAuthencator authencator = new DefaultApiAuthencator(new MySqlResourceLoader());
+    }
+}
 ```

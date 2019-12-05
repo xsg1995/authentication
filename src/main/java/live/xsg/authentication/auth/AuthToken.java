@@ -1,7 +1,5 @@
 package live.xsg.authentication.auth;
 
-import live.xsg.authentication.utils.SecurityUtil;
-
 /**
  * 负责token的生成、校验等功能
  * Created by xsg on 2019/12/4.
@@ -28,6 +26,11 @@ public class AuthToken {
      */
     private long expiredTimeInterval;
 
+    /**
+     * token加解密
+     */
+    private TokenSecurity tokenSecurity;
+
     public AuthToken(String token, long createTime) {
         this(token, createTime, DEFAULT_EXPIRED_TIME_INTERVAL);
     }
@@ -36,6 +39,20 @@ public class AuthToken {
         this.token = token;
         this.createTime = createTime;
         this.expiredTimeInterval = expiredTimeInterval;
+    }
+
+    public AuthToken(String token, long createTime, ResourceLoader resourceLoader) {
+       if(resourceLoader != null) {
+           Long expiredTime = resourceLoader.getValueLongByKey(Constant.EXPIRED_TIME_INTERVAL);
+           if(expiredTime != null && expiredTime.longValue() > 0) {
+               this.expiredTimeInterval = expiredTime;
+           } else {
+               this.expiredTimeInterval = DEFAULT_EXPIRED_TIME_INTERVAL;
+           }
+       }
+        this.token = token;
+        this.createTime = createTime;
+
     }
 
     /**
@@ -47,9 +64,36 @@ public class AuthToken {
      * @return
      */
     public static AuthToken generate(String baseUrl, String appId, String password, long createTime) {
-        String appendStr = baseUrl + appId + password + createTime;
-        String token = SecurityUtil.encrypt(appendStr);
+        String token = AuthToken.getToken(baseUrl, appId, password, createTime);
         return new AuthToken(token, createTime);
+    }
+
+    /**
+     * 根据URL、AppID、密码、时间戳生成token，并指定配置读取，创建AuthToken返回
+     * @param baseUrl
+     * @param appId
+     * @param password
+     * @param createTime
+     * @param resourceLoader 具体的配置文件读取
+     * @return
+     */
+    public static AuthToken generate(String baseUrl, String appId, String password, long createTime, ResourceLoader resourceLoader) {
+        String token = AuthToken.getToken(baseUrl, appId, password, createTime);
+        return new AuthToken(token, createTime, resourceLoader);
+    }
+
+    /**
+     * 根据URL、AppID、密码、时间戳生成token
+     * @param baseUrl
+     * @param appId
+     * @param password
+     * @param createTime
+     * @return
+     */
+    public static String getToken(String baseUrl, String appId, String password, long createTime) {
+        String appendStr = baseUrl + appId + password + createTime;
+        String token = DefaultTokenSecurity.getInstance().encrypt(appendStr);
+        return token;
     }
 
     /**
@@ -76,4 +120,5 @@ public class AuthToken {
     public boolean match(AuthToken authToken) {
         return this.token.equals(authToken.getToken());
     }
+
 }

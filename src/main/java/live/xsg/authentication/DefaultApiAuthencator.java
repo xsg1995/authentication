@@ -1,9 +1,6 @@
 package live.xsg.authentication;
 
-import live.xsg.authentication.auth.ApiRequest;
-import live.xsg.authentication.auth.AuthToken;
-import live.xsg.authentication.auth.CredentialStorage;
-import live.xsg.authentication.auth.PropertiesCredentialStorage;
+import live.xsg.authentication.auth.*;
 import live.xsg.authentication.exception.TokenInvalidException;
 
 /**
@@ -13,13 +10,24 @@ import live.xsg.authentication.exception.TokenInvalidException;
 public class DefaultApiAuthencator implements ApiAuthencator {
 
     private CredentialStorage credentialStorage;
+    private ResourceLoader resourceLoader;
 
     public DefaultApiAuthencator() {
-        this.credentialStorage = new PropertiesCredentialStorage();
+        this.credentialStorage = new DefaultCredentialStorage();
+        this.resourceLoader = new DefaultResourceLoader();
     }
 
     public DefaultApiAuthencator(CredentialStorage credentialStorage) {
+        this(credentialStorage, new DefaultResourceLoader());
+    }
+
+    public DefaultApiAuthencator(ResourceLoader resourceLoader) {
+        this(new DefaultCredentialStorage(), resourceLoader);
+    }
+
+    public DefaultApiAuthencator(CredentialStorage credentialStorage, ResourceLoader resourceLoader) {
         this.credentialStorage = credentialStorage;
+        this.resourceLoader = resourceLoader;
     }
 
     @Override
@@ -35,14 +43,14 @@ public class DefaultApiAuthencator implements ApiAuthencator {
         long timeStamp = apiRequest.getTimeStamp();
         String baseUrl = apiRequest.getBaseUrl();
 
-        AuthToken clientAuthToken = new AuthToken(token, timeStamp);
+        AuthToken clientAuthToken = new AuthToken(token, timeStamp, resourceLoader);
         if(clientAuthToken.isExpired()) {
             throw new TokenInvalidException("Token is Expired.");
         }
 
         String password = this.credentialStorage.getPasswordByAppId(appId);
 
-        AuthToken serverAuthToken = AuthToken.generate(baseUrl, appId, password, timeStamp);
+        AuthToken serverAuthToken = AuthToken.generate(baseUrl, appId, password, timeStamp, resourceLoader);
         if(!serverAuthToken.match(clientAuthToken)) {
             throw new TokenInvalidException("Token verify failed.");
         }

@@ -1,8 +1,8 @@
 package live.xsg.authentication;
 
 import live.xsg.authentication.auth.ApiRequest;
+import live.xsg.authentication.auth.DefaultTokenSecurity;
 import live.xsg.authentication.exception.TokenInvalidException;
-import live.xsg.authentication.utils.SecurityUtil;
 
 /**
  * Created by xsg on 2019/12/4.
@@ -13,7 +13,7 @@ public class Demo2 {
         String appId = "app1";
         String password = "xxx1";
         long timeStamp = System.currentTimeMillis();
-        String token = SecurityUtil.encrypt( baseUrl + appId + password + timeStamp);
+        String token = DefaultTokenSecurity.getInstance().encrypt( baseUrl + appId + password + timeStamp);
 
         //默认使用PropertiesCredentialStorage，从配置文件app.properties获取appId和密码
         DefaultApiAuthencator authencator = new DefaultApiAuthencator();
