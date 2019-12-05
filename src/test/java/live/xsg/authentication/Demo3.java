@@ -1,6 +1,7 @@
 package live.xsg.authentication;
 
 import live.xsg.authentication.auth.DefaultTokenSecurity;
+import live.xsg.authentication.auth.TokenSecurity;
 import live.xsg.authentication.custom.MySqlResourceLoader;
 import live.xsg.authentication.exception.TokenInvalidException;
 
@@ -9,11 +10,11 @@ import live.xsg.authentication.exception.TokenInvalidException;
  */
 public class Demo3 {
     public static void main(String[] args) {
-
-        String password = "123456";
+        TokenSecurity tokenSecurity = new DefaultTokenSecurity();
+        String password = "xxx1";
         String appId = "app1";
         long timeStamp = System.currentTimeMillis();
-        String token = DefaultTokenSecurity.getInstance().encrypt( "http://localhost:8080/server" + appId + password + timeStamp);
+        String token = tokenSecurity.encrypt( "http://localhost:8080/server" + appId + password + timeStamp);
         String url = "http://localhost:8080/server?token="+token+"&app_id="+appId+"&time_stamp=" + timeStamp;
 
         //指定MySqlResourceLoader，从数据库中获取配置信息

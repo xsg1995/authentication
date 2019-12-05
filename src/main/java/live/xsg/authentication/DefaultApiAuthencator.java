@@ -2,6 +2,7 @@ package live.xsg.authentication;
 
 import live.xsg.authentication.auth.*;
 import live.xsg.authentication.exception.TokenInvalidException;
+import live.xsg.authentication.support.AuthTokenBuilder;
 
 /**
  * 认证接口默认实现
@@ -11,23 +12,28 @@ public class DefaultApiAuthencator implements ApiAuthencator {
 
     private CredentialStorage credentialStorage;
     private ResourceLoader resourceLoader;
+    private AuthTokenBuilder authTokenBuilder;
 
     public DefaultApiAuthencator() {
-        this.credentialStorage = new DefaultCredentialStorage();
-        this.resourceLoader = new DefaultResourceLoader();
-    }
-
-    public DefaultApiAuthencator(CredentialStorage credentialStorage) {
-        this(credentialStorage, new DefaultResourceLoader());
+        this(new DefaultCredentialStorage(), new DefaultResourceLoader(), new AuthTokenBuilder());
     }
 
     public DefaultApiAuthencator(ResourceLoader resourceLoader) {
-        this(new DefaultCredentialStorage(), resourceLoader);
+        this(new DefaultCredentialStorage(), resourceLoader, new AuthTokenBuilder());
+    }
+
+    public DefaultApiAuthencator(CredentialStorage credentialStorage) {
+        this(credentialStorage, new DefaultResourceLoader(), new AuthTokenBuilder());
     }
 
     public DefaultApiAuthencator(CredentialStorage credentialStorage, ResourceLoader resourceLoader) {
+        this(credentialStorage, resourceLoader, new AuthTokenBuilder());
+    }
+
+    public DefaultApiAuthencator(CredentialStorage credentialStorage, ResourceLoader resourceLoader, AuthTokenBuilder authTokenBuilder) {
         this.credentialStorage = credentialStorage;
         this.resourceLoader = resourceLoader;
+        this.authTokenBuilder = authTokenBuilder;
     }
 
     @Override
@@ -43,14 +49,14 @@ public class DefaultApiAuthencator implements ApiAuthencator {
         long timeStamp = apiRequest.getTimeStamp();
         String baseUrl = apiRequest.getBaseUrl();
 
-        AuthToken clientAuthToken = new AuthToken(token, timeStamp, resourceLoader);
+        AuthToken clientAuthToken = this.authTokenBuilder.generate(token, timeStamp, resourceLoader);
         if(clientAuthToken.isExpired()) {
             throw new TokenInvalidException("Token is Expired.");
         }
 
         String password = this.credentialStorage.getPasswordByAppId(appId);
 
-        AuthToken serverAuthToken = AuthToken.generate(baseUrl, appId, password, timeStamp, resourceLoader);
+        AuthToken serverAuthToken = this.authTokenBuilder.generate(baseUrl, appId, password, timeStamp, resourceLoader);
         if(!serverAuthToken.match(clientAuthToken)) {
             throw new TokenInvalidException("Token verify failed.");
         }

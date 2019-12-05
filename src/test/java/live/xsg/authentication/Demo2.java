@@ -2,6 +2,7 @@ package live.xsg.authentication;
 
 import live.xsg.authentication.auth.ApiRequest;
 import live.xsg.authentication.auth.DefaultTokenSecurity;
+import live.xsg.authentication.auth.TokenSecurity;
 import live.xsg.authentication.exception.TokenInvalidException;
 
 /**
@@ -9,11 +10,12 @@ import live.xsg.authentication.exception.TokenInvalidException;
  */
 public class Demo2 {
     public static void main(String[] args) {
+        TokenSecurity tokenSecurity = new DefaultTokenSecurity();
         String baseUrl = "http://localhost:8080/server";
         String appId = "app1";
         String password = "xxx1";
         long timeStamp = System.currentTimeMillis();
-        String token = DefaultTokenSecurity.getInstance().encrypt( baseUrl + appId + password + timeStamp);
+        String token = tokenSecurity.encrypt( baseUrl + appId + password + timeStamp);
 
         //默认使用PropertiesCredentialStorage，从配置文件app.properties获取appId和密码
         DefaultApiAuthencator authencator = new DefaultApiAuthencator();

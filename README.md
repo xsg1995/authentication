@@ -13,13 +13,17 @@
 ```java
 public class Demo {
     public static void main(String[] args) {
+        
+        //客户端生成token
+        TokenSecurity tokenSecurity = new DefaultTokenSecurity();
         String baseUrl = "http://localhost:8080/server";
         String appId = "app1";
         String password = "xxx1";
         long timeStamp = System.currentTimeMillis();
         //URL、AppID、密码、时间戳拼接在一起，通过加密算法生成token
-        String token = DefaultTokenSecurity.getInstance().encrypt( baseUrl + appId + password + timeStamp);
+        String token = tokenSecurity.encrypt( baseUrl + appId + password + timeStamp);
         
+        //服务端验证
         DefaultApiAuthencator authencator = new DefaultApiAuthencator();
         ApiRequest request = new ApiRequest(baseUrl, token, appId, timeStamp);
         try {
@@ -56,7 +60,16 @@ public class Demo {
 
 ```
 
-* 自定义MySqlResourceLoader，从mysql中获取配置信息，实现ResourceLoader接口
+## 配置文件
+* 默认从authentication.properties中读取配置文件信息
+```properties
+#token超时时间，单位毫秒
+auth.expired.time.interval=120000
+#指定token加密算法
+auth.token.security.class=live.xsg.authentication.auth.DefaultTokenSecurity
+```
+
+* 自定义资源加载器MySqlResourceLoader，从mysql中获取配置信息，实现ResourceLoader接口
 ```java
 /**
  * 自定义配置资源加载，从mysql中获取
@@ -81,4 +94,26 @@ public class Demo3 {
         DefaultApiAuthencator authencator = new DefaultApiAuthencator(new MySqlResourceLoader());
     }
 }
+```
+
+## token加密算法
+* 默认使用DefaultTokenSecurity
+* 自定义token加密算法，实现TokenSecurity接口
+```java
+public class MyTokenSecurity implements TokenSecurity {
+    @Override
+    public String encrypt(String token) {
+        return "my" + token;
+    }
+
+    @Override
+    public String decrypt(String encryptToken) {
+        throw new UnsupportedOperationException();
+    }
+}
+```
+指定auth.token.security.class配置参数为加密算法
+
+```properties
+auth.token.security.class=live.xsg.authentication.custom.MyTokenSecurity
 ```

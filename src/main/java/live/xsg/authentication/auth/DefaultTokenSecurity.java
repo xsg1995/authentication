@@ -6,14 +6,6 @@ package live.xsg.authentication.auth;
  */
 public class DefaultTokenSecurity implements TokenSecurity {
 
-    static class DefaultTokenSecurityHolder {
-        public static DefaultTokenSecurity instance = new DefaultTokenSecurity();
-    }
-
-    public static DefaultTokenSecurity getInstance() {
-        return DefaultTokenSecurityHolder.instance;
-    }
-
     @Override
     public String encrypt(String token) {
         return token;

@@ -13,4 +13,6 @@ public class Constant {
     public static final String TIME_STAMP = "time_stamp";
 
     public static final String EXPIRED_TIME_INTERVAL = "auth.expired.time.interval";
+
+    public static final String TOKEN_SECURITY_CLASS = "auth.token.security.class";
 }
