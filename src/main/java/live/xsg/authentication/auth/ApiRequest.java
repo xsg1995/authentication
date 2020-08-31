@@ -1,5 +1,6 @@
 package live.xsg.authentication.auth;
 
+import live.xsg.authentication.common.Constant;
 import live.xsg.authentication.utils.UrlAnalysis;
 
 /**
@@ -37,8 +38,8 @@ public class ApiRequest {
 
     /**
      * 从url中解析出appId,baseUrl,token,timeStamp信息，创建ApiRequest返回
-     * @param url
-     * @return
+     * @param url 请求url
+     * @return ApiRequest
      */
     public static ApiRequest createFromFullUrl(String url) {
         UrlAnalysis urlAnalysis = UrlAnalysis.generate(url);
@@ -52,7 +53,7 @@ public class ApiRequest {
 
     /**
      * 获取请求url
-     * @return
+     * @return url
      */
     public String getBaseUrl() {
         return baseUrl;
@@ -60,7 +61,7 @@ public class ApiRequest {
 
     /**
      * 获取请求token
-     * @return
+     * @return token
      */
     public String getToken() {
         return token;
@@ -68,7 +69,7 @@ public class ApiRequest {
 
     /**
      * 获取请求的AppId
-     * @return
+     * @return appId
      */
     public String getAppId() {
         return appId;
@@ -76,7 +77,7 @@ public class ApiRequest {
 
     /**
      * 获取请求的时间戳
-     * @return
+     * @return timeStamp
      */
     public long getTimeStamp() {
         return timeStamp;

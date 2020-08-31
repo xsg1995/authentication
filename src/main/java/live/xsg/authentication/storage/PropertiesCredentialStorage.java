@@ -1,4 +1,4 @@
-package live.xsg.authentication.auth;
+package live.xsg.authentication.storage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,13 +8,13 @@ import java.util.Properties;
  * 从properties文件中取出AppId对应的密码
  * Created by xsg on 2019/12/4.
  */
-public class DefaultCredentialStorage implements CredentialStorage {
+public class PropertiesCredentialStorage implements CredentialStorage {
 
     private static final String PROPERTIES_FILE_NAME = "/app.properties";
     private static Properties properties = new Properties();
 
     static {
-        InputStream in = DefaultCredentialStorage.class.getResourceAsStream(PROPERTIES_FILE_NAME);
+        InputStream in = PropertiesCredentialStorage.class.getResourceAsStream(PROPERTIES_FILE_NAME);
         try {
             properties.load(in);
         } catch (IOException e) {

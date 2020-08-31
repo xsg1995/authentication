@@ -1,4 +1,4 @@
-package live.xsg.authentication.auth;
+package live.xsg.authentication.resource;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,9 +19,7 @@ public class DefaultResourceLoader implements ResourceLoader {
     static {
         try(InputStream is = DefaultResourceLoader.class.getResourceAsStream(DEFAULT_RESOURCE_NAME)) {
             prop.load(is);
-        } catch (IOException e) {
-
-        }
+        } catch (IOException ignored) { }
     }
 
     @Override
@@ -36,8 +34,7 @@ public class DefaultResourceLoader implements ResourceLoader {
             if(StringUtils.isNotBlank(val)) {
                 return Long.parseLong(val);
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
         return null;
     }
 }

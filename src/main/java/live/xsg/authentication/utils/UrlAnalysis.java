@@ -32,8 +32,8 @@ public class UrlAnalysis {
 
     /**
      * 根据key获取参数值
-     * @param key
-     * @return
+     * @param key key
+     * @return key对应的参数
      */
     public String get(String key) {
         return this.paramsMap.get(key);
@@ -41,7 +41,7 @@ public class UrlAnalysis {
 
     /**
      * 解析url中的参数 http://localhost:8080/server?a=x&b=x
-     * @return
+     * @return UrlAnalysis
      */
     public static UrlAnalysis generate(String url) {
         if(StringUtils.isEmpty(url)) {
@@ -55,19 +55,16 @@ public class UrlAnalysis {
         if(urlSplit[1] != null) {
             String params = urlSplit[1];
             String[] paramsSplit = params.split("&");
-            if(paramsSplit != null && paramsSplit.length > 0) {
+            if(paramsSplit.length > 0) {
                 for (String keyVal : paramsSplit) {
                     String[] keyValSplit = keyVal.split("=");
-                    if(keyValSplit != null) {
-                        String key = keyValSplit.length > 0 ? keyValSplit[0] : "";
-                        String val = keyValSplit.length > 1 ? keyValSplit[1] : "";
-                        paramMap.put(key, val);
-                    }
+                    String key = keyValSplit.length > 0 ? keyValSplit[0] : "";
+                    String val = keyValSplit.length > 1 ? keyValSplit[1] : "";
+                    paramMap.put(key, val);
                 }
             }
         }
-        UrlAnalysis urlAnalysis = new UrlAnalysis(baseUrl, paramMap);
-        return urlAnalysis;
+        return new UrlAnalysis(baseUrl, paramMap);
     }
 
     public static void main(String[] args) {

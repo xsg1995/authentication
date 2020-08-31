@@ -1,5 +1,8 @@
 package live.xsg.authentication.auth;
 
+import live.xsg.authentication.common.Constant;
+import live.xsg.authentication.resource.ResourceLoader;
+
 /**
  * 负责token的生成、校验等功能
  * Created by xsg on 2019/12/4.
@@ -7,9 +10,9 @@ package live.xsg.authentication.auth;
 public class AuthToken {
 
     /**
-     * token默认的过期时间
+     * token默认的过期时间 单位 ms
      */
-    private static final long DEFAULT_EXPIRED_TIME_INTERVAL = 1 * 60 * 1000;
+    private static final long DEFAULT_EXPIRED_TIME_INTERVAL = 60 * 1000;
 
     /**
      * token
@@ -26,11 +29,6 @@ public class AuthToken {
      */
     private long expiredTimeInterval;
 
-    /**
-     * token加解密
-     */
-    private TokenSecurity tokenSecurity;
-
     public AuthToken(String token, long createTime) {
         this(token, createTime, DEFAULT_EXPIRED_TIME_INTERVAL);
     }
@@ -44,7 +42,7 @@ public class AuthToken {
     public AuthToken(String token, long createTime, ResourceLoader resourceLoader) {
        if(resourceLoader != null) {
            Long expiredTime = resourceLoader.getValueLongByKey(Constant.EXPIRED_TIME_INTERVAL);
-           if(expiredTime != null && expiredTime.longValue() > 0) {
+           if(expiredTime != null && expiredTime > 0) {
                this.expiredTimeInterval = expiredTime;
            } else {
                this.expiredTimeInterval = DEFAULT_EXPIRED_TIME_INTERVAL;
@@ -68,12 +66,12 @@ public class AuthToken {
      * @return false 没有过期， true 过期
      */
     public boolean isExpired() {
-        return this.createTime + this.expiredTimeInterval > System.currentTimeMillis() ? false : true;
+        return (this.createTime + this.expiredTimeInterval) <= System.currentTimeMillis();
     }
 
     /**
      * 验证两个token是否匹配
-     * @param authToken
+     * @param authToken 待匹配的 token
      * @return false 不匹配， true 匹配
      */
     public boolean match(AuthToken authToken) {

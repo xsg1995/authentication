@@ -66,7 +66,7 @@ public class Demo {
 #token超时时间，单位毫秒
 auth.expired.time.interval=120000
 #指定token加密算法
-auth.token.security.class=live.xsg.authentication.auth.DefaultTokenSecurity
+auth.token.security.class=live.xsg.authentication.security.ShaTokenSecurity
 ```
 
 * 自定义资源加载器MySqlResourceLoader，从mysql中获取配置信息，实现ResourceLoader接口

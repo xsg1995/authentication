@@ -1,4 +1,4 @@
-package live.xsg.authentication.auth;
+package live.xsg.authentication.common;
 
 /**
  * 存储常量值
